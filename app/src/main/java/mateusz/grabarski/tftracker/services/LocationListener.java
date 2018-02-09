@@ -54,15 +54,15 @@ public class LocationListener implements android.location.LocationListener {
                         this);
             } catch (SecurityException e) {
                 e.printStackTrace();
-                mListener.noPermissionsGranted();
             }
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        mLastLocation = location;
         Log.d(TAG, "onLocationChanged: " + location);
+        mLastLocation = location;
+        mListener.currentDeviceLocation(location);
     }
 
     @Override

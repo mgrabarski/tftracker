@@ -1,9 +1,11 @@
 package mateusz.grabarski.tftracker.services.interfaces;
 
+import android.location.Location;
+
 /**
  * Created by MGrabarski on 07.02.2018.
  */
 
 public interface LocationInterface {
-    void noPermissionsGranted();
+    void currentDeviceLocation(Location location);
 }

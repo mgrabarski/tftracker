@@ -9,4 +9,7 @@ public class Constants {
     // location constants
     public static final long LOCATION_DISTANCE_CHANGE = 10L; // 10 meters
     public static final long LOCATION_INTERVAL = 1000L; // 1 sec
+
+    // maps
+    public static final float DEFAULT_ZOOM = 15f;
 }
