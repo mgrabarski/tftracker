@@ -3,7 +3,7 @@ package mateusz.grabarski.tftracker.base.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import mateusz.grabarski.tftracker.MainActivity;
+import mateusz.grabarski.tftracker.views.main.MainActivity;
 import mateusz.grabarski.tftracker.data.database.managers.RouteManager;
 import mateusz.grabarski.tftracker.services.LocationService;
 
