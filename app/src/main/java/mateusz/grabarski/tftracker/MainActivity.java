@@ -3,7 +3,6 @@ package mateusz.grabarski.tftracker;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -107,8 +106,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
 
     @Subscribe
     public void onCurrentRouteLocationUpdate(Route route) {
-        Log.d(TAG, "event2: " + route.toString());
-
         refreshPathOnMap(route);
     }
 

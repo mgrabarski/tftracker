@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import mateusz.grabarski.tftracker.MainActivity;
+import mateusz.grabarski.tftracker.data.database.managers.RouteManager;
 import mateusz.grabarski.tftracker.services.LocationService;
 
 /**
@@ -16,4 +17,5 @@ import mateusz.grabarski.tftracker.services.LocationService;
 public interface ApplicationComponent {
     void inject(MainActivity activity);
     void inject(LocationService service);
+    void inject(RouteManager routeManager);
 }

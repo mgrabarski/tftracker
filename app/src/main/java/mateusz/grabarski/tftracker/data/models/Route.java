@@ -1,17 +1,30 @@
 package mateusz.grabarski.tftracker.data.models;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by MGrabarski on 10.02.2018.
  */
-
+@DatabaseTable(tableName = "ROUTE")
 public class Route {
 
+    public static final String ID_COLUMN = "ID";
+    public static final String CREATE_TS_COLUMN = "CREATE_TIME";
+
+    @DatabaseField(generatedId = true, columnName = ID_COLUMN)
     private long id;
+
+    @DatabaseField(columnName = CREATE_TS_COLUMN)
     private long createTimestamp;
-    private List<RouteLocation> locations;
+
+    @ForeignCollectionField(eager = true)
+    private Collection<RouteLocation> locations;
 
     public Route() {
         locations = new ArrayList<>();
@@ -38,7 +51,7 @@ public class Route {
         this.createTimestamp = createTimestamp;
     }
 
-    public List<RouteLocation> getLocations() {
+    public Collection<RouteLocation> getLocations() {
         return locations;
     }
 

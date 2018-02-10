@@ -9,6 +9,9 @@ import dagger.Module;
 import dagger.Provides;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.Constants;
+import mateusz.grabarski.tftracker.data.database.DatabaseHelper;
+import mateusz.grabarski.tftracker.data.database.managers.RouteManager;
+import mateusz.grabarski.tftracker.data.database.managers.interfaces.RouteManagerInterface;
 
 /**
  * Created by MGrabarski on 10.02.2018.
@@ -39,5 +42,17 @@ public class ApplicationModule {
     @Provides
     public AppSettings provideAppSettings(SharedPreferences sharedPreferences) {
         return new AppSettings(sharedPreferences);
+    }
+
+    @Singleton
+    @Provides
+    public DatabaseHelper provideDatabaseHelper(Context context) {
+        return DatabaseHelper.getInstance(context);
+    }
+
+    @Singleton
+    @Provides
+    public RouteManagerInterface provideRouteManager(DatabaseHelper databaseHelper) {
+        return new RouteManager(databaseHelper);
     }
 }

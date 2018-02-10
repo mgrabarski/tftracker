@@ -4,6 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
+import android.util.Log;
+
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 
@@ -11,6 +14,7 @@ import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.base.listeners.AppSettingsObserver;
+import mateusz.grabarski.tftracker.data.database.managers.interfaces.RouteManagerInterface;
 import mateusz.grabarski.tftracker.data.models.Route;
 import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
@@ -28,6 +32,9 @@ public class LocationService extends Service implements LocationInterface, AppSe
     @Inject
     AppSettings appSettings;
 
+    @Inject
+    RouteManagerInterface routeManager;
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -41,6 +48,7 @@ public class LocationService extends Service implements LocationInterface, AppSe
 
     @Override
     public void onCreate() {
+        Log.d(LocationService.class.getSimpleName(), "onCreate: ");
         MainBus.getBus().register(this);
         mLocationListener = new LocationListener(this, getApplicationContext());
         ((App) getApplicationContext()).getApplicationComponent().inject(this);
@@ -65,6 +73,12 @@ public class LocationService extends Service implements LocationInterface, AppSe
 
             mCurrentRoute.addNewRouteLocation(routeLocation);
 
+            try {
+                routeManager.addLocationToRoute(mCurrentRoute, routeLocation);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             postOnMain(mCurrentRoute);
         }
     }
@@ -77,6 +91,11 @@ public class LocationService extends Service implements LocationInterface, AppSe
     public void onTrackingChange(boolean tracking) {
         if (tracking) {
             mCurrentRoute = new Route(System.currentTimeMillis());
+            try {
+                routeManager.insert(mCurrentRoute);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
             // TODO: 10.02.2018 save route
             mCurrentRoute = null;
