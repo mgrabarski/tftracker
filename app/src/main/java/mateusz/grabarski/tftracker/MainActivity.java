@@ -3,8 +3,6 @@ package mateusz.grabarski.tftracker;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -21,14 +19,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
+import mateusz.grabarski.tftracker.base.BaseActivity;
 import mateusz.grabarski.tftracker.base.Constants;
-import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.services.LocationService;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
 import mateusz.grabarski.tftracker.utils.GoogleServiceChecker;
 import mateusz.grabarski.tftracker.utils.Permissions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MainActivity";
 
@@ -46,10 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        MainBus.getBus().register(this);
-
-        ((App) getApplicationContext()).getApplicationComponent().inject(this);
-
         trackingSwitch.setChecked(appSettings.getTracking());
 
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -63,17 +57,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             checkLocationPermission();
     }
 
+    @Override
+    protected void inject() {
+        ((App) getApplicationContext()).getApplicationComponent().inject(this);
+    }
+
     private void checkLocationPermission() {
         if (Permissions.checkLocationPermission(this))
             initMap();
 
         // TODO: 08.02.2018 else consider grand location permission dialog
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MainBus.getBus().unregister(this);
     }
 
     private void initMap() {
@@ -100,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
-    
+
     @Subscribe
     public void event(CurrentLocationEvent event) {
         moveCamera(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()), Constants.DEFAULT_ZOOM);
