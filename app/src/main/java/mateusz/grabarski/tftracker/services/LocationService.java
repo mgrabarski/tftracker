@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
 
+import javax.inject.Inject;
+
+import mateusz.grabarski.tftracker.base.App;
+import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
 import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
@@ -16,6 +20,9 @@ import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
 public class LocationService extends Service implements LocationInterface {
 
     private LocationListener mLocationListener;
+
+    @Inject
+    AppSettings appSettings;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -32,6 +39,7 @@ public class LocationService extends Service implements LocationInterface {
     public void onCreate() {
         MainBus.getBus().register(this);
         mLocationListener = new LocationListener(this, getApplicationContext());
+        ((App) getApplicationContext()).getApplicationComponent().inject(this);
     }
 
     @Override

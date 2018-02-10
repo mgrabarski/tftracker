@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.d(TAG, "onCheckedChanged: " + isChecked);
                 appSettings.setTracking(isChecked);
             }
         });
