@@ -11,6 +11,8 @@ import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.base.listeners.AppSettingsObserver;
+import mateusz.grabarski.tftracker.data.models.Route;
+import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
 import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
 
@@ -21,6 +23,7 @@ import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
 public class LocationService extends Service implements LocationInterface, AppSettingsObserver {
 
     private LocationListener mLocationListener;
+    private Route mCurrentRoute;
 
     @Inject
     AppSettings appSettings;
@@ -54,6 +57,16 @@ public class LocationService extends Service implements LocationInterface, AppSe
     @Override
     public void currentDeviceLocation(Location location) {
         postOnMain(new CurrentLocationEvent(location));
+
+        if (mCurrentRoute != null) {
+            RouteLocation routeLocation = new RouteLocation(location.getTime(),
+                    location.getLatitude(),
+                    location.getLongitude());
+
+            mCurrentRoute.addNewRouteLocation(routeLocation);
+
+            postOnMain(mCurrentRoute);
+        }
     }
 
     private void postOnMain(Object object) {
@@ -62,6 +75,11 @@ public class LocationService extends Service implements LocationInterface, AppSe
 
     @Override
     public void onTrackingChange(boolean tracking) {
-        // TODO: 10.02.2018 turn on/off tracking
+        if (tracking) {
+            mCurrentRoute = new Route(System.currentTimeMillis());
+        } else {
+            // TODO: 10.02.2018 save route
+            mCurrentRoute = null;
+        }
     }
 }
