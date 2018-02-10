@@ -80,7 +80,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         startService(new Intent(this, LocationService.class));
     }
 
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {

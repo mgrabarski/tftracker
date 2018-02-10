@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.MainBus;
+import mateusz.grabarski.tftracker.base.listeners.AppSettingsObserver;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
 import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
 
@@ -17,7 +18,7 @@ import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
  * Created by MGrabarski on 07.02.2018.
  */
 
-public class LocationService extends Service implements LocationInterface {
+public class LocationService extends Service implements LocationInterface, AppSettingsObserver {
 
     private LocationListener mLocationListener;
 
@@ -40,6 +41,7 @@ public class LocationService extends Service implements LocationInterface {
         MainBus.getBus().register(this);
         mLocationListener = new LocationListener(this, getApplicationContext());
         ((App) getApplicationContext()).getApplicationComponent().inject(this);
+        appSettings.addObserver(this);
     }
 
     @Override
@@ -56,5 +58,10 @@ public class LocationService extends Service implements LocationInterface {
 
     private void postOnMain(Object object) {
         MainBus.getBus().post(object);
+    }
+
+    @Override
+    public void onTrackingChange(boolean tracking) {
+        // TODO: 10.02.2018 turn on/off tracking
     }
 }
