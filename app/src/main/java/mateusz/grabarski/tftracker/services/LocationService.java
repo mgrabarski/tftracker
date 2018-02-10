@@ -96,6 +96,7 @@ public class LocationService extends Service implements LocationInterface, AppSe
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            postOnMain(mCurrentRoute);
         } else {
             // TODO: 10.02.2018 save route
             mCurrentRoute = null;

@@ -118,7 +118,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.addAll(locations);
 
-        mGoogleMap.addPolyline(polylineOptions);
+        if (locations.size() > 0)
+            mGoogleMap.addPolyline(polylineOptions);
+        else
+            mGoogleMap.clear();
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
