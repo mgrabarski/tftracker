@@ -12,4 +12,7 @@ public class Constants {
 
     // maps
     public static final float DEFAULT_ZOOM = 15f;
+
+    // shared preferences
+    public static final String SP_FILE_NAME = "prefs";
 }

@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,6 +15,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import mateusz.grabarski.tftracker.base.App;
+import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.Constants;
 import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.services.LocationService;
@@ -23,14 +32,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = "MainActivity";
 
+    @BindView(R.id.activity_main_tracking_switch)
+    Switch trackingSwitch;
+
+    @Inject
+    AppSettings appSettings;
+
     private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         MainBus.getBus().register(this);
+
+        ((App) getApplicationContext()).getApplicationComponent().inject(this);
+
+        trackingSwitch.setChecked(appSettings.getTracking());
+
+        trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged: " + isChecked);
+                appSettings.setTracking(isChecked);
+            }
+        });
 
         if (GoogleServiceChecker.isGoogleServicesOk(this))
             checkLocationPermission();
