@@ -3,6 +3,7 @@ package mateusz.grabarski.tftracker;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -21,6 +22,7 @@ import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.BaseActivity;
 import mateusz.grabarski.tftracker.base.Constants;
+import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.LocationService;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
 import mateusz.grabarski.tftracker.utils.GoogleServiceChecker;
@@ -80,7 +82,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         startService(new Intent(this, LocationService.class));
     }
 
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -95,8 +96,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     @Subscribe
-    public void event(CurrentLocationEvent event) {
+    public void onCurrentLocationChange(CurrentLocationEvent event) {
         moveCamera(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()), Constants.DEFAULT_ZOOM);
+    }
+
+    @Subscribe
+    public void onCurrentRouteLocationUpdate(RouteLocation routeLocation) {
+        Log.d(TAG, "event2: " + routeLocation.toString());
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
