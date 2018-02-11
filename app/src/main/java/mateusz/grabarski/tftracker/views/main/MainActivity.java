@@ -82,7 +82,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void checkLocationPermission() {
         initLocationService();
-        Permissions.checkLocationPermission(this);
+
+        if (Permissions.checkLocationPermission(this))
+            initMap();
     }
 
     @Override
@@ -152,7 +154,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        if (mGoogleMap != null)
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
     @Override
