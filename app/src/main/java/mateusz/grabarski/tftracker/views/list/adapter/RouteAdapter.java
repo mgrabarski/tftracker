@@ -82,9 +82,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             else
                 trackingTime = 0;
 
-            trackingTimeTv.setText(trackingSimpleDateFormat.format(new Date(trackingTime)));
-
-            counterTv.setText(String.valueOf(locations.size()));
+            trackingTimeTv.setText(trackingTimeTv.getContext().getString(R.string.tracking_time) + " " + trackingSimpleDateFormat.format(new Date(trackingTime)));
+            counterTv.setText(counterTv.getContext().getString(R.string.location_counter) + " " + String.valueOf(locations.size()));
         }
     }
 }
