@@ -4,7 +4,7 @@ import android.app.Application;
 
 import mateusz.grabarski.tftracker.base.di.ApplicationComponent;
 import mateusz.grabarski.tftracker.base.di.ApplicationModule;
-import mateusz.grabarski.tftracker.base.di.DaggerApplicationComponent;
+import mateusz.grabarski.tftracker.base.di .DaggerApplicationComponent;
 
 /**
  * Created by MGrabarski on 10.02.2018.
