@@ -1,6 +1,7 @@
 package mateusz.grabarski.tftracker.data.database.managers;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,5 +42,10 @@ public class RouteManager implements RouteManagerInterface {
     public void addLocationToRoute(Route route, RouteLocation location) throws SQLException {
         location.setRoute(route);
         databaseHelper.getRouteLocationsDao().create(location);
+    }
+
+    @Override
+    public List<Route> getAllRoutes() throws SQLException {
+        return databaseHelper.getRouteDao().queryForAll();
     }
 }
