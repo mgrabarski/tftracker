@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">tftracker</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyD2hCkrmGWY2NG0S8HxmvaPYheuKOq0imA</string>
+    <string name="tracking">Tracking</string>
+    <string name="history">History</string>
+    <string name="tracking_time">Tracking time:</string>
+    <string name="location_counter">Location counter:</string>
+    <string name="start">Start:</string>
+    <string name="end">End:</string>
 </resources>
