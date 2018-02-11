@@ -28,10 +28,12 @@ import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.BaseActivity;
 import mateusz.grabarski.tftracker.base.Constants;
+import mateusz.grabarski.tftracker.base.MainBus;
 import mateusz.grabarski.tftracker.data.models.Route;
 import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.LocationService;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
+import mateusz.grabarski.tftracker.services.events.CurrentRouteTruckedEvent;
 import mateusz.grabarski.tftracker.utils.GoogleServiceChecker;
 import mateusz.grabarski.tftracker.utils.Permissions;
 import mateusz.grabarski.tftracker.views.list.RouteListActivity;
@@ -62,6 +64,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
                 appSettings.setTracking(isChecked);
             }
         });
+
+        if (appSettings.getTracking())
+            MainBus.getBus().post(new CurrentRouteTruckedEvent());
 
         if (GoogleServiceChecker.isGoogleServicesOk(this))
             checkLocationPermission();
@@ -106,6 +111,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Subscribe
     public void onCurrentLocationChange(CurrentLocationEvent event) {
         moveCamera(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()), Constants.DEFAULT_ZOOM);
+
+        mGoogleMap.
     }
 
     @Subscribe

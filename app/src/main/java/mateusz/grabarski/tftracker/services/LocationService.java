@@ -21,6 +21,7 @@ import mateusz.grabarski.tftracker.data.database.managers.interfaces.RouteManage
 import mateusz.grabarski.tftracker.data.models.Route;
 import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.events.CurrentLocationEvent;
+import mateusz.grabarski.tftracker.services.events.CurrentRouteTruckedEvent;
 import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
 
 /**
@@ -111,5 +112,11 @@ public class LocationService extends Service implements LocationInterface, AppSe
             mLocationListener.stopTracking();
         else
             mLocationListener.updateLocation();
+    }
+
+    @Subscribe
+    public void onCurrentRouteTruckedRequest(CurrentRouteTruckedEvent event) {
+        if (mCurrentRoute != null && appSettings.getTracking())
+            postOnMain(mCurrentRoute);
     }
 }
