@@ -111,8 +111,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Subscribe
     public void onCurrentLocationChange(CurrentLocationEvent event) {
         moveCamera(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()), Constants.DEFAULT_ZOOM);
-
-        mGoogleMap.
     }
 
     @Subscribe
