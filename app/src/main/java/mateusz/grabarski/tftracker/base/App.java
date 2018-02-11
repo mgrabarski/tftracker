@@ -17,6 +17,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ApplicationLifecycleHandler applicationLifecycleHandler = new ApplicationLifecycleHandler();
+        registerActivityLifecycleCallbacks(applicationLifecycleHandler);
+        registerComponentCallbacks(applicationLifecycleHandler);
     }
 
     public ApplicationComponent getApplicationComponent() {

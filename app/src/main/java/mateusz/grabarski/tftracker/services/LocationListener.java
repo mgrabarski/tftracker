@@ -1,14 +1,18 @@
 package mateusz.grabarski.tftracker.services;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import mateusz.grabarski.tftracker.base.Constants;
 import mateusz.grabarski.tftracker.services.interfaces.LocationInterface;
+import mateusz.grabarski.tftracker.utils.Permissions;
 
 /**
  * Created by MGrabarski on 07.02.2018.
@@ -20,25 +24,18 @@ public class LocationListener implements android.location.LocationListener {
 
     private LocationManager mLocationManager = null;
 
+    private Context mContext;
     private Location mLastLocation;
     private LocationInterface mListener;
 
     public LocationListener(LocationInterface listener, Context context) {
         this.mListener = listener;
+        this.mContext = context;
 
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         if (mLocationManager != null) {
-            Criteria criteria = new Criteria();
-            criteria.setAltitudeRequired(true);
-            criteria.setSpeedRequired(true);
-            criteria.setCostAllowed(true);
-            criteria.setBearingRequired(true);
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-            criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-            criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
-            criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+            Criteria criteria = getCriteria();
             mLocationManager.getBestProvider(criteria, true);
 
             try {
@@ -56,6 +53,21 @@ public class LocationListener implements android.location.LocationListener {
                 e.printStackTrace();
             }
         }
+    }
+
+    @NonNull
+    private Criteria getCriteria() {
+        Criteria criteria = new Criteria();
+        criteria.setAltitudeRequired(true);
+        criteria.setSpeedRequired(true);
+        criteria.setCostAllowed(true);
+        criteria.setBearingRequired(true);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        return criteria;
     }
 
     @Override
@@ -84,5 +96,16 @@ public class LocationListener implements android.location.LocationListener {
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(this);
         }
+    }
+
+    public void stopTracking() {
+        cleanUp();
+    }
+
+    @SuppressLint("MissingPermission")
+    public void updateLocation() {
+        Criteria criteria = getCriteria();
+        if (Permissions.isPermissionGranted((Activity) mContext))
+            mLocationManager.requestSingleUpdate(criteria, this, null);
     }
 }

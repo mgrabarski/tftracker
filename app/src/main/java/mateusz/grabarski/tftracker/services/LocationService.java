@@ -6,6 +6,8 @@ import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.squareup.otto.Subscribe;
+
 import java.sql.SQLException;
 
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import javax.inject.Inject;
 import mateusz.grabarski.tftracker.base.App;
 import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.MainBus;
+import mateusz.grabarski.tftracker.base.events.ApplicationLifecycleEvent;
 import mateusz.grabarski.tftracker.base.listeners.AppSettingsObserver;
 import mateusz.grabarski.tftracker.data.database.managers.interfaces.RouteManagerInterface;
 import mateusz.grabarski.tftracker.data.models.Route;
@@ -98,8 +101,15 @@ public class LocationService extends Service implements LocationInterface, AppSe
             }
             postOnMain(mCurrentRoute);
         } else {
-            // TODO: 10.02.2018 save route
             mCurrentRoute = null;
         }
+    }
+
+    @Subscribe
+    public void onApplicationLifecycleEvent(ApplicationLifecycleEvent event) {
+        if (event.isBackground() && !appSettings.getTracking())
+            mLocationListener.stopTracking();
+        else
+            mLocationListener.updateLocation();
     }
 }
