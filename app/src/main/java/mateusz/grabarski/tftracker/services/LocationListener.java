@@ -1,12 +1,14 @@
 package mateusz.grabarski.tftracker.services;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import mateusz.grabarski.tftracker.base.Constants;
@@ -100,9 +102,12 @@ public class LocationListener implements android.location.LocationListener {
         cleanUp();
     }
 
-    @SuppressLint("MissingPermission")
     public void updateLocation() {
         Criteria criteria = getCriteria();
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         mLocationManager.requestSingleUpdate(criteria, this, null);
     }
 }

@@ -2,7 +2,9 @@ package mateusz.grabarski.tftracker.views.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
@@ -29,6 +31,7 @@ import mateusz.grabarski.tftracker.base.AppSettings;
 import mateusz.grabarski.tftracker.base.BaseActivity;
 import mateusz.grabarski.tftracker.base.Constants;
 import mateusz.grabarski.tftracker.base.MainBus;
+import mateusz.grabarski.tftracker.base.events.ApplicationLifecycleEvent;
 import mateusz.grabarski.tftracker.data.models.Route;
 import mateusz.grabarski.tftracker.data.models.RouteLocation;
 import mateusz.grabarski.tftracker.services.LocationService;
@@ -78,17 +81,30 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void checkLocationPermission() {
-        if (Permissions.checkLocationPermission(this))
-            initMap();
+        initLocationService();
+        Permissions.checkLocationPermission(this);
+    }
 
-        // TODO: 08.02.2018 else consider grand location permission dialog
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case Permissions.LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                    }
+                    initMap();
+                }
+            }
+        }
     }
 
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.activity_main_map);
         mapFragment.getMapAsync(this);
-
-        initLocationService();
     }
 
     private void initLocationService() {
@@ -103,6 +119,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         if (Permissions.isPermissionGranted(this)) {
             return;
         }
+
+        MainBus.getBus().post(new ApplicationLifecycleEvent(false));
 
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);

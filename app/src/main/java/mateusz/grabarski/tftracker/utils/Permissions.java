@@ -2,9 +2,13 @@ package mateusz.grabarski.tftracker.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+
+import mateusz.grabarski.tftracker.base.MainBus;
+import mateusz.grabarski.tftracker.base.events.ApplicationLifecycleEvent;
 
 /**
  * Created by MGrabarski on 08.02.2018.
@@ -24,7 +28,7 @@ public class Permissions {
                 PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(activity, COURSE_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED) {
-
+                MainBus.getBus().post(new ApplicationLifecycleEvent(false));
                 return true;
             } else {
                 ActivityCompat.requestPermissions(activity,
@@ -40,10 +44,10 @@ public class Permissions {
         }
     }
 
-    public static boolean isPermissionGranted(Activity activity) {
-        return ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) !=
+    public static boolean isPermissionGranted(Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) !=
                         PackageManager.PERMISSION_GRANTED;
     }
 }
