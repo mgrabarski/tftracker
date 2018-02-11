@@ -5,4 +5,6 @@
     <string name="history">History</string>
     <string name="tracking_time">Tracking time:</string>
     <string name="location_counter">Location counter:</string>
+    <string name="start">Start:</string>
+    <string name="end">End:</string>
 </resources>

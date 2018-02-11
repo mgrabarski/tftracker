@@ -63,6 +63,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         @BindView(R.id.item_route_counter_tv)
         TextView counterTv;
 
+        @BindView(R.id.item_route_start_time_tv)
+        TextView startTimeTv;
+
+        @BindView(R.id.item_route_end_time_tv)
+        TextView endTimeTv;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -84,6 +90,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
             trackingTimeTv.setText(trackingTimeTv.getContext().getString(R.string.tracking_time) + " " + trackingSimpleDateFormat.format(new Date(trackingTime)));
             counterTv.setText(counterTv.getContext().getString(R.string.location_counter) + " " + String.valueOf(locations.size()));
+            startTimeTv.setText(startTimeTv.getContext().getString(R.string.start) + " " + hourSimpleDateFormat.format(new Date(route.getCreateTimestamp())));
+            endTimeTv.setText(endTimeTv.getContext().getString(R.string.end) + " " + hourSimpleDateFormat.format(new Date(locations.get(locations.size() - 1).getTime())));
         }
     }
 }
