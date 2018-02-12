@@ -35,7 +35,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".views.list.RouteListActivity"></activity>
+        <activity android:name=".views.list.RouteListActivity" />
+        <activity android:name=".views.details.RouteDetailsActivity" />
     </application>
 
 </manifest>

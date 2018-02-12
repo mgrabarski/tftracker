@@ -3,11 +3,16 @@ package mateusz.grabarski.tftracker.data.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import mateusz.grabarski.tftracker.utils.DateUtils;
+
 /**
  * Created by MGrabarski on 10.02.2018.
  */
 @DatabaseTable(tableName = "LOCATION")
-public class RouteLocation {
+public class RouteLocation implements Serializable {
 
     public static final String ID_COLUMN = "ID";
     public static final String TIME_COLUMN = "TIME";
@@ -81,10 +86,8 @@ public class RouteLocation {
 
     @Override
     public String toString() {
-        return "RouteLocation{" +
-                "time=" + time +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+        return "Location:\n\ttime=" + DateUtils.hourSimpleDateFormat.format(new Date(time)) + ",\n" +
+                "\tlatitude=" + latitude + ",\n" +
+                "\tlongitude=" + longitude + ",\n";
     }
 }

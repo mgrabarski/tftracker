@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,7 @@ import butterknife.ButterKnife;
 import mateusz.grabarski.tftracker.R;
 import mateusz.grabarski.tftracker.data.models.Route;
 import mateusz.grabarski.tftracker.data.models.RouteLocation;
+import mateusz.grabarski.tftracker.utils.DateUtils;
 
 /**
  * Created by MGrabarski on 11.02.2018.
@@ -23,14 +23,13 @@ import mateusz.grabarski.tftracker.data.models.RouteLocation;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
 
-    private static SimpleDateFormat hourSimpleDateFormat;
-    private static SimpleDateFormat trackingSimpleDateFormat;
-    private List<Route> routes;
 
-    public RouteAdapter(List<Route> routes) {
+    private List<Route> routes;
+    private RouteItemClickListener mListener;
+
+    public RouteAdapter(List<Route> routes, RouteItemClickListener listener) {
         this.routes = routes;
-        hourSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        trackingSimpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        this.mListener = listener;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.populate(routes.get(position), position);
+        holder.populate(routes.get(position), position, mListener);
     }
 
     @Override
@@ -74,9 +73,9 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             ButterKnife.bind(this, itemView);
         }
 
-        public void populate(Route route, int position) {
+        public void populate(final Route route, int position, final RouteItemClickListener listener) {
             lpTv.setText(String.valueOf(position + 1));
-            hourTv.setText(hourSimpleDateFormat.format(new Date(route.getCreateTimestamp())));
+            hourTv.setText(DateUtils.hourSimpleDateFormat.format(new Date(route.getCreateTimestamp())));
 
             List<RouteLocation> locations = new ArrayList<>(route.getLocations());
             long trackingTime;
@@ -88,10 +87,17 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             else
                 trackingTime = 0;
 
-            trackingTimeTv.setText(trackingTimeTv.getContext().getString(R.string.tracking_time) + " " + trackingSimpleDateFormat.format(new Date(trackingTime)));
+            trackingTimeTv.setText(trackingTimeTv.getContext().getString(R.string.tracking_time) + " " + DateUtils.trackingSimpleDateFormat.format(new Date(trackingTime)));
             counterTv.setText(counterTv.getContext().getString(R.string.location_counter) + " " + String.valueOf(locations.size()));
-            startTimeTv.setText(startTimeTv.getContext().getString(R.string.start) + " " + hourSimpleDateFormat.format(new Date(route.getCreateTimestamp())));
-            endTimeTv.setText(endTimeTv.getContext().getString(R.string.end) + " " + hourSimpleDateFormat.format(new Date(locations.get(locations.size() - 1).getTime())));
+            startTimeTv.setText(startTimeTv.getContext().getString(R.string.start) + " " + DateUtils.hourSimpleDateFormat.format(new Date(route.getCreateTimestamp())));
+            endTimeTv.setText(endTimeTv.getContext().getString(R.string.end) + " " + DateUtils.hourSimpleDateFormat.format(new Date(locations.get(locations.size() - 1).getTime())));
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onRouteSelected(route);
+                }
+            });
         }
     }
 }
